@@ -30,6 +30,7 @@ import java.util.Map;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import net.runelite.client.plugins.Plugin;
 
 /**
  * UI navigation button.
@@ -85,4 +86,14 @@ public class NavigationButton
 	 * Map of key-value pairs for setting the popup menu
 	 */
 	private Map<String, Runnable> popup;
+
+	/**
+	 * The config group which owns this nav button
+	 */
+	private Class<? extends Plugin> owningPlugin;
+
+	/**
+	 * Whether to hide the button or not
+	 */
+	private boolean hidden;
 }

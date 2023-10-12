@@ -31,6 +31,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -56,6 +57,8 @@ class PluginListItem extends JPanel implements SearchablePlugin
 {
 	private static final ImageIcon CONFIG_ICON;
 	private static final ImageIcon CONFIG_ICON_HOVER;
+	private static final ImageIcon PANELS_VISIBLE_ICON;
+	private static final ImageIcon PANELS_INVISIBLE_ICON;
 	private static final ImageIcon ON_STAR;
 	private static final ImageIcon OFF_STAR;
 
@@ -63,6 +66,10 @@ class PluginListItem extends JPanel implements SearchablePlugin
 
 	@Getter
 	private final PluginConfigurationDescriptor pluginConfig;
+
+	private final boolean hasPanels;
+
+	private final boolean panelsVisible;
 
 	@Getter
 	private final List<String> keywords = new ArrayList<>();
@@ -74,7 +81,11 @@ class PluginListItem extends JPanel implements SearchablePlugin
 	{
 		BufferedImage configIcon = ImageUtil.loadImageResource(ConfigPanel.class, "config_edit_icon.png");
 		BufferedImage onStar = ImageUtil.loadImageResource(ConfigPanel.class, "star_on.png");
+		BufferedImage visiblePanelIcon = ImageUtil.loadImageResource(ConfigPanel.class, "panels_visible_icon.png");
+		BufferedImage invisiblePanelIcon = ImageUtil.loadImageResource(ConfigPanel.class, "panels_invisible_icon.png");
 		CONFIG_ICON = new ImageIcon(configIcon);
+		PANELS_VISIBLE_ICON = new ImageIcon(visiblePanelIcon);
+		PANELS_INVISIBLE_ICON = new ImageIcon(invisiblePanelIcon);
 		ON_STAR = new ImageIcon(onStar);
 		CONFIG_ICON_HOVER = new ImageIcon(ImageUtil.luminanceOffset(configIcon, -100));
 
@@ -85,10 +96,12 @@ class PluginListItem extends JPanel implements SearchablePlugin
 		OFF_STAR = new ImageIcon(offStar);
 	}
 
-	PluginListItem(PluginListPanel pluginListPanel, PluginConfigurationDescriptor pluginConfig)
+	PluginListItem(PluginListPanel pluginListPanel, PluginConfigurationDescriptor pluginConfig, boolean hasPanels, boolean panelsVisible)
 	{
 		this.pluginListPanel = pluginListPanel;
 		this.pluginConfig = pluginConfig;
+		this.hasPanels = hasPanels;
+		this.panelsVisible = panelsVisible;
 
 		Collections.addAll(keywords, pluginConfig.getName().toLowerCase().split(" "));
 		Collections.addAll(keywords, pluginConfig.getDescription().toLowerCase().split(" "));
@@ -133,6 +146,28 @@ class PluginListItem extends JPanel implements SearchablePlugin
 		add(buttonPanel, BorderLayout.LINE_END);
 
 		JMenuItem configMenuItem = null;
+		if (hasPanels && pluginConfig.getPlugin() != null)
+		{
+			JButton panelsButton = new JButton(panelsVisible ? PANELS_VISIBLE_ICON : PANELS_INVISIBLE_ICON);
+			panelsButton.setRolloverIcon(panelsVisible ? PANELS_INVISIBLE_ICON : PANELS_VISIBLE_ICON);
+			SwingUtil.removeButtonDecorations(panelsButton);
+			panelsButton.setPreferredSize(new Dimension(25, 0));
+			panelsButton.setVisible(false);
+			buttonPanel.add(panelsButton);
+
+			panelsButton.addActionListener(e ->
+			{
+				boolean isHidden = pluginListPanel.toggleAssociatedPanels(pluginConfig.getPlugin());
+				panelsButton.setVisible(false);
+				panelsButton.setIcon(isHidden ? PANELS_INVISIBLE_ICON : PANELS_VISIBLE_ICON);
+				panelsButton.setRolloverIcon(isHidden ? PANELS_VISIBLE_ICON : PANELS_INVISIBLE_ICON);
+				panelsButton.setToolTipText(isHidden ? "Show plugin panels" : "Hide plugin panels");
+				panelsButton.setVisible(true);
+			});
+
+			panelsButton.setVisible(true);
+			panelsButton.setToolTipText(panelsVisible ? "Hide plugin panels" : "Show plugin panels");
+		}
 		if (pluginConfig.hasConfigurables())
 		{
 			JButton configButton = new JButton(CONFIG_ICON);

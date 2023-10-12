@@ -518,6 +518,34 @@ public class PluginManager
 		return value != null ? Boolean.parseBoolean(value) : pluginDescriptor.enabledByDefault();
 	}
 
+	public void setPluginPanelsHidden(Plugin plugin, boolean hidden)
+	{
+		setPluginPanelsHidden(plugin.getClass(), hidden);
+	}
+
+	private void setPluginPanelsHidden(Class<? extends Plugin> plugin, boolean hidden)
+	{
+		final PluginDescriptor pluginDescriptor = plugin.getAnnotation(PluginDescriptor.class);
+		final String keyName = "panels_" + (Strings.isNullOrEmpty(pluginDescriptor.configName()) ? plugin.getSimpleName() : pluginDescriptor.configName());
+		configManager.setConfiguration(RuneLiteConfig.GROUP_NAME, keyName.toLowerCase(), String.valueOf(hidden));
+	}
+
+	public boolean arePluginPanelsHidden(Plugin plugin)
+	{
+		return arePluginPanelsHidden(plugin.getClass());
+	}
+
+	public boolean arePluginPanelsHidden(Class<? extends Plugin> pluginClazz)
+	{
+		final PluginDescriptor pluginDescriptor = pluginClazz.getAnnotation(PluginDescriptor.class);
+		final String keyName = "plugin_" + (Strings.isNullOrEmpty(pluginDescriptor.configName()) ? pluginClazz.getSimpleName() : pluginDescriptor.configName());
+		final String value = configManager.getConfiguration(RuneLiteConfig.GROUP_NAME, keyName.toLowerCase());
+		if (value == null) {
+			return false;
+		}
+		return Boolean.parseBoolean(value);
+	}
+
 	private Plugin instantiate(List<Plugin> scannedPlugins, Class<Plugin> clazz) throws PluginInstantiationException
 	{
 		PluginDependency[] pluginDependencies = clazz.getAnnotationsByType(PluginDependency.class);

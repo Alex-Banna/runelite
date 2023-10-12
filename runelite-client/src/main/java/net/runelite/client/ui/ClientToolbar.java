@@ -24,27 +24,35 @@
  */
 package net.runelite.client.ui;
 
-import java.util.HashSet;
-import java.util.Set;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.events.NavigationButtonAdded;
 import net.runelite.client.events.NavigationButtonRemoved;
+import net.runelite.client.plugins.Plugin;
+import net.runelite.client.plugins.PluginManager;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Plugin toolbar buttons holder.
  */
 @Singleton
+@Slf4j
 public class ClientToolbar
 {
 	private final EventBus eventBus;
+
+	private final PluginManager pluginManager;
 	private final Set<NavigationButton> buttons = new HashSet<>();
 
 	@Inject
-	private ClientToolbar(final EventBus eventBus)
+	private ClientToolbar(final EventBus eventBus, final PluginManager pluginManager)
 	{
 		this.eventBus = eventBus;
+		this.pluginManager = pluginManager;
 	}
 
 	/**
@@ -52,8 +60,9 @@ public class ClientToolbar
 	 *
 	 * @param button the button
 	 */
-	public void addNavigation(final NavigationButton button)
+	public void addNavigation(final NavigationButton button, Class<? extends Plugin> pluginClazz)
 	{
+		button.setOwningPlugin(pluginClazz);
 		if (buttons.contains(button))
 		{
 			return;
@@ -61,8 +70,26 @@ public class ClientToolbar
 
 		if (buttons.add(button))
 		{
-			eventBus.post(new NavigationButtonAdded(button));
+			if (!pluginManager.arePluginPanelsHidden(pluginClazz)) {
+				eventBus.post(new NavigationButtonAdded(button));
+			}
 		}
+	}
+
+	public void addNavigation(final NavigationButton button)
+	{
+		// Get the plugin class from the stack (eww)
+		for (StackTraceElement e : Thread.currentThread().getStackTrace()) {
+			try {
+				Class<?> elementClazz = Class.forName(e.getClassName());
+				if (Plugin.class.isAssignableFrom(elementClazz)) {
+					addNavigation(button, (Class<? extends Plugin>) elementClazz);
+					return;
+				}
+			} catch (ClassNotFoundException ignored) {
+			}
+		}
+		addNavigation(button, null);
 	}
 
 	/**
@@ -75,6 +102,30 @@ public class ClientToolbar
 		if (buttons.remove(button))
 		{
 			eventBus.post(new NavigationButtonRemoved(button));
+		}
+	}
+
+	/**
+	 * Get all current navigation buttons
+	 */
+	public Set<NavigationButton> getNavigationButtons() {
+		return buttons;
+	}
+
+	/**
+	 * Hide all nav buttons associated with the provided plugin
+	 *
+	 * @param owningPlugin the Plugin class of the plugin
+	 */
+	public void togglePanelGroup(Class<? extends Plugin> owningPlugin) {
+		if (owningPlugin == null) {
+			return;
+		}
+		for (NavigationButton button : buttons) {
+			if (owningPlugin.equals(button.getOwningPlugin())) {
+				button.setHidden(!button.isHidden());
+				eventBus.post(button.isHidden() ? new NavigationButtonRemoved(button) : new NavigationButtonAdded(button));
+			}
 		}
 	}
 }

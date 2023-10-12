@@ -61,9 +61,11 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginInstantiationException;
 import net.runelite.client.plugins.PluginManager;
+import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.DynamicGridLayout;
 import net.runelite.client.ui.MultiplexingPluginPanel;
+import net.runelite.client.ui.NavigationButton;
 import net.runelite.client.ui.PluginPanel;
 import net.runelite.client.ui.components.IconTextField;
 import net.runelite.client.util.Text;
@@ -93,6 +95,8 @@ class PluginListPanel extends PluginPanel
 	@Getter
 	private final ExternalPluginManager externalPluginManager;
 
+	private final ClientToolbar clientToolbar;
+
 	@Getter
 	private final MultiplexingPluginPanel muxer;
 
@@ -106,6 +110,7 @@ class PluginListPanel extends PluginPanel
 		ConfigManager configManager,
 		PluginManager pluginManager,
 		ExternalPluginManager externalPluginManager,
+		ClientToolbar clientToolbar,
 		EventBus eventBus,
 		Provider<ConfigPanel> configPanelProvider)
 	{
@@ -114,6 +119,7 @@ class PluginListPanel extends PluginPanel
 		this.configManager = configManager;
 		this.pluginManager = pluginManager;
 		this.externalPluginManager = externalPluginManager;
+		this.clientToolbar = clientToolbar;
 		this.configPanelProvider = configPanelProvider;
 
 		muxer = new MultiplexingPluginPanel(this)
@@ -211,7 +217,14 @@ class PluginListPanel extends PluginPanel
 		)
 			.map(desc ->
 			{
-				PluginListItem listItem = new PluginListItem(this, desc);
+				boolean hasPanels = false;
+				boolean panelsVisible = false;
+				if (desc.getPlugin() != null) {
+					List<Boolean> panelStatuses = panelStatuses(desc.getPlugin().getClass());
+					hasPanels = !panelStatuses.isEmpty();
+					panelsVisible = panelStatuses.contains(Boolean.FALSE);
+				}
+				PluginListItem listItem = new PluginListItem(this, desc, hasPanels, panelsVisible);
 				listItem.setPinned(pinnedPlugins.contains(desc.getName()));
 				return listItem;
 			})
@@ -343,6 +356,26 @@ class PluginListPanel extends PluginPanel
 			.collect(Collectors.joining(","));
 
 		configManager.setConfiguration(RUNELITE_GROUP_NAME, PINNED_PLUGINS_CONFIG_KEY, value);
+	}
+
+	List<Boolean> panelStatuses(Class<? extends Plugin> pluginClazz)
+	{
+		if (pluginClazz == null) {
+			return Collections.emptyList();
+		}
+		return clientToolbar.getNavigationButtons()
+				.stream()
+				.filter(n -> pluginClazz.equals(n.getOwningPlugin()))
+				.map(NavigationButton::isHidden)
+				.collect(Collectors.toList());
+	}
+
+	boolean toggleAssociatedPanels(Plugin plugin)
+	{
+		boolean hiddenAfterToggling = !pluginManager.arePluginPanelsHidden(plugin);
+		clientToolbar.togglePanelGroup(plugin.getClass());
+		pluginManager.setPluginPanelsHidden(plugin, hiddenAfterToggling);
+		return hiddenAfterToggling;
 	}
 
 	@Subscribe

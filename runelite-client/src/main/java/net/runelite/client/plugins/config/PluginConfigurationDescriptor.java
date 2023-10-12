@@ -64,7 +64,7 @@ class PluginConfigurationDescriptor
 
 	PluginConfigurationDescriptor(String name, String description, String[] tags, Config config, ConfigDescriptor configDescriptor)
 	{
-		this(name, description, tags, null, config, configDescriptor, null);
+		this(name, description, tags,  null, config, configDescriptor, null);
 	}
 
 	/**
