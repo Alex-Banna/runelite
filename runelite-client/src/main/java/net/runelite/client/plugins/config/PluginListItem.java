@@ -149,7 +149,6 @@ class PluginListItem extends JPanel implements SearchablePlugin
 		if (hasPanels && pluginConfig.getPlugin() != null)
 		{
 			JButton panelsButton = new JButton(panelsVisible ? PANELS_VISIBLE_ICON : PANELS_INVISIBLE_ICON);
-			panelsButton.setRolloverIcon(panelsVisible ? PANELS_INVISIBLE_ICON : PANELS_VISIBLE_ICON);
 			SwingUtil.removeButtonDecorations(panelsButton);
 			panelsButton.setPreferredSize(new Dimension(25, 0));
 			panelsButton.setVisible(false);
@@ -160,7 +159,6 @@ class PluginListItem extends JPanel implements SearchablePlugin
 				boolean isHidden = pluginListPanel.toggleAssociatedPanels(pluginConfig.getPlugin());
 				panelsButton.setVisible(false);
 				panelsButton.setIcon(isHidden ? PANELS_INVISIBLE_ICON : PANELS_VISIBLE_ICON);
-				panelsButton.setRolloverIcon(isHidden ? PANELS_VISIBLE_ICON : PANELS_INVISIBLE_ICON);
 				panelsButton.setToolTipText(isHidden ? "Show plugin panels" : "Hide plugin panels");
 				panelsButton.setVisible(true);
 			});
