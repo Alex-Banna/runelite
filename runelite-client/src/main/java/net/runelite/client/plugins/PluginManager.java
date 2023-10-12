@@ -538,7 +538,7 @@ public class PluginManager
 	public boolean arePluginPanelsHidden(Class<? extends Plugin> pluginClazz)
 	{
 		final PluginDescriptor pluginDescriptor = pluginClazz.getAnnotation(PluginDescriptor.class);
-		final String keyName = "plugin_" + (Strings.isNullOrEmpty(pluginDescriptor.configName()) ? pluginClazz.getSimpleName() : pluginDescriptor.configName());
+		final String keyName = "panels_" + (Strings.isNullOrEmpty(pluginDescriptor.configName()) ? pluginClazz.getSimpleName() : pluginDescriptor.configName());
 		final String value = configManager.getConfiguration(RuneLiteConfig.GROUP_NAME, keyName.toLowerCase());
 		if (value == null) {
 			return false;
