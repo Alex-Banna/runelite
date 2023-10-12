@@ -318,7 +318,7 @@ public class GrandExchangePlugin extends Plugin
 			.panel(panel)
 			.build();
 
-		clientToolbar.addNavigation(button);
+		clientToolbar.addNavigation(button, GrandExchangePlugin.class);
 
 		if (config.quickLookup())
 		{

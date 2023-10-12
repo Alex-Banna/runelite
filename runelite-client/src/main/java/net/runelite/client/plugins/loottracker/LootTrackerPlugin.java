@@ -576,7 +576,7 @@ public class LootTrackerPlugin extends Plugin
 			.panel(panel)
 			.build();
 
-		clientToolbar.addNavigation(navButton);
+		clientToolbar.addNavigation(navButton, LootTrackerPlugin.class);
 
 		AccountSession accountSession = sessionManager.getAccountSession();
 		if (accountSession != null)

@@ -150,7 +150,7 @@ public class KourendLibraryPlugin extends Plugin
 
 		if (!config.hideButton())
 		{
-			clientToolbar.addNavigation(navButton);
+			clientToolbar.addNavigation(navButton, KourendLibraryPlugin.class);
 		}
 	}
 
@@ -185,7 +185,7 @@ public class KourendLibraryPlugin extends Plugin
 			{
 				if (!config.hideButton())
 				{
-					clientToolbar.addNavigation(navButton);
+					clientToolbar.addNavigation(navButton, KourendLibraryPlugin.class);
 				}
 				else
 				{
@@ -193,7 +193,7 @@ public class KourendLibraryPlugin extends Plugin
 					boolean inRegion = lp != null && lp.getWorldLocation().getRegionID() == REGION;
 					if (inRegion)
 					{
-						clientToolbar.addNavigation(navButton);
+						clientToolbar.addNavigation(navButton, KourendLibraryPlugin.class);
 					}
 					else
 					{
@@ -277,7 +277,7 @@ public class KourendLibraryPlugin extends Plugin
 				if (inRegion)
 				{
 					panel.reload();
-					clientToolbar.addNavigation(navButton);
+					clientToolbar.addNavigation(navButton, KourendLibraryPlugin.class);
 				}
 				else
 				{

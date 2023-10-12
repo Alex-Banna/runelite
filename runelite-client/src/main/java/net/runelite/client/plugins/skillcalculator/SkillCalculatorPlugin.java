@@ -68,7 +68,7 @@ public class SkillCalculatorPlugin extends Plugin
 			.panel(uiPanel.get())
 			.build();
 
-		clientToolbar.addNavigation(uiNavigationButton);
+		clientToolbar.addNavigation(uiNavigationButton, SkillCalculatorPlugin.class);
 	}
 
 	@Override

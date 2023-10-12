@@ -107,7 +107,7 @@ public class HiscorePlugin extends Plugin
 			.panel(hiscorePanel)
 			.build();
 
-		clientToolbar.addNavigation(navButton);
+		clientToolbar.addNavigation(navButton, HiscorePlugin.class);
 
 		if (config.playerOption() && client != null)
 		{

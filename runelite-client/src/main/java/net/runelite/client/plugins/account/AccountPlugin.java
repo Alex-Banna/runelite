@@ -99,7 +99,7 @@ public class AccountPlugin extends Plugin
 		clientToolbar.removeNavigation(logoutButton);
 		clientToolbar.addNavigation(sessionManager.getAccountSession() == null
 			? loginButton
-			: logoutButton);
+			: logoutButton, AccountPlugin.class);
 	}
 
 	@Override

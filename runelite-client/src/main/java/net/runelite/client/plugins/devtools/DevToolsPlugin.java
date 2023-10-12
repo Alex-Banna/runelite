@@ -217,7 +217,7 @@ public class DevToolsPlugin extends Plugin
 			.panel(panel)
 			.build();
 
-		clientToolbar.addNavigation(navButton);
+		clientToolbar.addNavigation(navButton, DevToolsPlugin.class);
 
 		eventBus.register(soundEffectOverlay);
 	}

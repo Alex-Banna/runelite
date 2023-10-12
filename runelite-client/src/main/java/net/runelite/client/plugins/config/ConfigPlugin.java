@@ -97,7 +97,7 @@ public class ConfigPlugin extends Plugin
 			.panel(topLevelConfigPanel)
 			.build();
 
-		clientToolbar.addNavigation(navButton);
+		clientToolbar.addNavigation(navButton, ConfigPlugin.class);
 	}
 
 	@Override

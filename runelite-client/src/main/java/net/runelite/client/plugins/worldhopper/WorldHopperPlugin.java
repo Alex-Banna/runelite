@@ -204,7 +204,7 @@ public class WorldHopperPlugin extends Plugin
 
 		if (config.showSidebar())
 		{
-			clientToolbar.addNavigation(navButton);
+			clientToolbar.addNavigation(navButton, WorldHopperPlugin.class);
 		}
 
 		overlayManager.add(worldHopperOverlay);
@@ -256,7 +256,7 @@ public class WorldHopperPlugin extends Plugin
 				case "showSidebar":
 					if (config.showSidebar())
 					{
-						clientToolbar.addNavigation(navButton);
+						clientToolbar.addNavigation(navButton, WorldHopperPlugin.class);
 					}
 					else
 					{

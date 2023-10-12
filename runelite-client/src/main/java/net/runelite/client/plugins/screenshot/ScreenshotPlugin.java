@@ -244,7 +244,7 @@ public class ScreenshotPlugin extends Plugin
 				.build())
 			.build();
 
-		clientToolbar.addNavigation(titleBarButton);
+		clientToolbar.addNavigation(titleBarButton, ScreenshotPlugin.class);
 
 		spriteManager.getSpriteAsync(SpriteID.CHATBOX_REPORT_BUTTON, 0, s -> reportButton = s);
 	}

@@ -126,7 +126,7 @@ public class DiscordPlugin extends Plugin
 			.onClick(() -> LinkBrowser.browse(discordInvite))
 			.build();
 
-		clientToolbar.addNavigation(discordButton);
+		clientToolbar.addNavigation(discordButton, DiscordPlugin.class);
 		resetState();
 		checkForGameStateUpdate();
 		checkForAreaUpdate();

@@ -74,7 +74,7 @@ public class NotesPlugin extends Plugin
 			.panel(panel)
 			.build();
 
-		clientToolbar.addNavigation(navButton);
+		clientToolbar.addNavigation(navButton, NotesPlugin.class);
 	}
 
 	@Override

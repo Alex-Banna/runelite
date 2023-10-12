@@ -161,7 +161,7 @@ public class XpTrackerPlugin extends Plugin
 			.panel(xpPanel)
 			.build();
 
-		clientToolbar.addNavigation(navButton);
+		clientToolbar.addNavigation(navButton, XpTrackerPlugin.class);
 
 		// Initialize the tracker & last xp if already logged in
 		fetchXp = true;

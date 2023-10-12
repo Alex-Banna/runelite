@@ -76,8 +76,10 @@ public class ClientToolbar
 		}
 	}
 
+	@Deprecated
 	public void addNavigation(final NavigationButton button)
 	{
+		log.warn("Adding navigation bars without specifying the plugin class can lead to unintended results, please use clientToolbar.addNavigation(button, MyPlugin.class)");
 		// Get the plugin class from the stack (eww)
 		for (StackTraceElement e : Thread.currentThread().getStackTrace()) {
 			try {

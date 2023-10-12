@@ -194,7 +194,7 @@ public class PartyPlugin extends Plugin
 			.panel(panel)
 			.build();
 
-		clientToolbar.addNavigation(navButton);
+		clientToolbar.addNavigation(navButton, PartyPlugin.class);
 
 		overlayManager.add(partyPingOverlay);
 		overlayManager.add(partyStatusOverlay);

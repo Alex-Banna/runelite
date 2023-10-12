@@ -60,7 +60,7 @@ public class InfoPlugin extends Plugin
 			.panel(panel)
 			.build();
 
-		clientToolbar.addNavigation(navButton);
+		clientToolbar.addNavigation(navButton, InfoPlugin.class);
 	}
 
 	@Override

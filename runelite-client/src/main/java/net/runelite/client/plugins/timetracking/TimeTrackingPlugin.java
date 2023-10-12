@@ -151,7 +151,7 @@ public class TimeTrackingPlugin extends Plugin
 			.priority(4)
 			.build();
 
-		clientToolbar.addNavigation(navButton);
+		clientToolbar.addNavigation(navButton, TimeTrackingPlugin.class);
 
 		panelUpdateFuture = executorService.scheduleAtFixedRate(this::updatePanel, 200, 200, TimeUnit.MILLISECONDS);
 		notifierFuture = executorService.scheduleAtFixedRate(this::checkCompletion, 10, 10, TimeUnit.SECONDS);

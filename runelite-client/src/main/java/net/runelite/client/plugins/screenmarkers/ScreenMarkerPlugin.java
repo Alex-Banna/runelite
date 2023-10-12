@@ -138,7 +138,7 @@ public class ScreenMarkerPlugin extends Plugin
 			.panel(pluginPanel)
 			.build();
 
-		clientToolbar.addNavigation(navigationButton);
+		clientToolbar.addNavigation(navigationButton, ScreenMarkerPlugin.class);
 
 		mouseListener = new ScreenMarkerMouseListener(this);
 	}
